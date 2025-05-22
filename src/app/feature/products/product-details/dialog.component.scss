@@ -1,0 +1,102 @@
+.container-fluid {
+    padding: 16px;
+  }
+  
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 16px;
+    
+    h2 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      
+      .icon-primary {
+        color: #3f51b5;
+        margin-right: 8px;
+      }
+    }
+  }
+  
+  .filters-card {
+    margin-bottom: 16px;
+    
+    .filter-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      
+      mat-form-field {
+        flex: 1;
+        min-width: 200px;
+      }
+    }
+  }
+  
+  .product-name {
+    .small-text {
+      font-size: 0.8em;
+      color: rgba(0, 0, 0, 0.54);
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  
+  .text-danger {
+    color: #f44336;
+  }
+  
+  .text-success {
+    color: #4caf50;
+  }
+  /* Contenedor principal de acciones */
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; /* Espacio entre botones */
+  padding: 16px 24px; /* Espaciado interno */
+  margin-top: 16px; /* Separación del contenido superior */
+}
+
+/* Estilo para los botones */
+mat-dialog-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px; /* Ancho mínimo para consistencia */
+}
+
+/* Estilo específico para el botón de editar */
+mat-dialog-actions button[color='primary'] {
+  margin-left: 8px; /* Espacio adicional a la izquierda */
+}
+
+/* Ajuste del icono dentro del botón */
+mat-dialog-actions mat-icon {
+  margin-right: 8px; /* Espacio entre icono y texto */
+  font-size: 18px; /* Tamaño del icono */
+  height: 18px; /* Altura del icono */
+  width: 18px; /* Ancho del icono */
+}
+
+/* Versión responsive para pantallas pequeñas */
+@media (max-width: 600px) {
+  mat-dialog-actions {
+    flex-direction: column-reverse; /* Apila botones en móvil */
+    align-items: flex-end;
+    gap: 12px;
+  }
+  
+  mat-dialog-actions button[color='primary'] {
+    margin-left: 0;
+    margin-bottom: 8px;
+  }
+}

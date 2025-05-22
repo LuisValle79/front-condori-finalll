@@ -1,0 +1,264 @@
+/* customer-form.component.scss */
+
+/* Variables globales para consistencia */
+:root {
+    --primary-color: #3f51b5;
+    --primary-light: #e8eaf6;
+    --warn-color: #f44336;
+    --success-color: #4caf50;
+    --text-primary: #333333;
+    --text-secondary: #757575;
+    --border-color: #e0e0e0;
+    --background-light: #f5f7fa;
+    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.08);
+    --transition-speed: 0.3s;
+  }
+  
+  /* Estilos del contenedor principal */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+  
+  /* Estilos para la card principal */
+  mat-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--transition-speed) ease;
+  }
+  
+  mat-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilos del encabezado */
+  mat-card-header {
+    background-color: var(--background-light);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+  }
+  
+  mat-card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  mat-card-subtitle {
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+  }
+  
+  /* Contenido del formulario */
+  mat-card-content {
+    padding: 1.5rem;
+  }
+  
+  /* Estilos para los títulos de sección */
+  h3 {
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+  
+  /* Grids responsivos */
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 768px) {
+    .md\:grid-cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .gap-4 {
+    gap: 1rem;
+  }
+  
+  .gap-6 {
+    gap: 1.5rem;
+  }
+  
+  /* Estilos para form fields */
+  mat-form-field.w-full {
+    width: 100%;
+  }
+  
+  /* Estilización de los campos de formulario */
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: var(--border-color);
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: var(--primary-color);
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-outline-thick {
+    color: var(--warn-color) !important;
+  }
+  
+  /* Iconos en los campos */
+  ::ng-deep .mat-form-field-prefix {
+    margin-right: 8px;
+    opacity: 0.7;
+  }
+  
+  ::ng-deep .mat-form-field-prefix .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Estilos para los select de estado */
+  .text-green-500 {
+    color: var(--success-color);
+  }
+  
+  .text-red-500 {
+    color: var(--warn-color);
+  }
+  
+  .text-gray-500, .text-gray-600, .text-gray-700 {
+    color: var(--text-secondary);
+  }
+  
+  /* Panel de botones */
+  .flex {
+    display: flex;
+  }
+  
+  .justify-end {
+    justify-content: flex-end;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .space-x-4 > * + * {
+    margin-left: 1rem;
+  }
+  
+  .border-t {
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+  
+  .pt-6 {
+    padding-top: 1.5rem;
+  }
+  
+  .mr-2 {
+    margin-right: 0.5rem;
+  }
+  
+  .px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  
+  /* Estilos para botones */
+  button[mat-raised-button], button[mat-stroked-button] {
+    border-radius: 4px;
+    padding: 0 1.5rem;
+    height: 42px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all var(--transition-speed) ease;
+  }
+  
+  button[mat-raised-button]:not([disabled]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+  
+  button[mat-stroked-button]:not([disabled]):hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  button[disabled] {
+    opacity: 0.7;
+  }
+  
+  button mat-icon {
+    margin-right: 0.5rem;
+  }
+  
+  /* Altura para espacio reservado */
+  .h-12 {
+    height: 3rem;
+  }
+  
+  /* Animaciones sutiles */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  mat-card {
+    animation: fadeIn 0.4s ease-out;
+  }
+  
+  /* Estilos para mensajes de error */
+  mat-error {
+    font-size: 12px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Mejoras de accesibilidad */
+  .mat-form-field-label {
+    color: var(--text-secondary) !important;
+  }
+  
+  input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Estado foco para todos los elementos interactivos */
+  :focus {
+    outline: none;
+  }
+  
+  /* Animación de transición suave en hover para todos los elementos interactivos */
+  button, select, input, mat-select {
+    transition: all var(--transition-speed) ease;
+  }
+
+  
+  .mat-icon{
+    color: #1976d2;
+  }
+  

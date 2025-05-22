@@ -1,0 +1,144 @@
+<div class="purchase-list-container px-4 py-6 max-w-7xl mx-auto">
+  <!-- Header section with title and action buttons -->
+  <mat-card class="p-6 shadow-md bg-white dark:bg-gray-800 rounded-xl mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Título -->
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Listado de Compras</h1>
+        <span *ngIf="dataSource.data.length > 0" class="text-sm text-gray-600 dark:text-gray-300">
+          Total: {{ dataSource.data.length }} compras
+        </span>
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex items-center gap-3">
+        <button mat-raised-button color="primary" [routerLink]="['/compras-add']" matTooltip="Crear nueva compra"
+          class="flex items-center gap-2">
+          <mat-icon>add</mat-icon>
+          Nueva Compra
+        </button>
+
+        <button mat-icon-button (click)="refreshData()" matTooltip="Actualizar datos">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Loading indicator -->
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="mb-4"></mat-progress-bar>
+
+  <!-- Filter -->
+  <div class="mb-4">
+    <mat-form-field appearance="outline" class="w-full md:w-1/3">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar por ID, proveedor, etc." #input>
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Table container -->
+  <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="min-w-full mat-elevation-z2">
+
+        <!-- ID -->
+        <ng-container matColumnDef="buys_Id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="whitespace-nowrap px-4 py-2 font-semibold">
+            {{ getHeader('buys_Id') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2">
+            {{ purchase.buysId }}
+          </td>
+        </ng-container>
+
+        <!-- Precio -->
+        <ng-container matColumnDef="buys_price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="whitespace-nowrap px-4 py-2 font-semibold">
+            {{ getHeader('buys_price') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2 text-green-600 font-medium">
+            {{ purchase.buysPrice | currency:'USD':'symbol':'1.2-2' }}
+          </td>
+        </ng-container>
+
+        <!-- Proveedor -->
+        <ng-container matColumnDef="supplierName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="whitespace-nowrap px-4 py-2 font-semibold">
+            {{ getHeader('supplierName') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2">
+            {{ purchase.supplier.name }}
+          </td>
+        </ng-container>
+
+        <!-- Fecha -->
+        <ng-container matColumnDef="buys_date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="whitespace-nowrap px-4 py-2 font-semibold">
+            {{ getHeader('buys_date') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2">
+            {{ purchase.buysDate }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="px-4 py-2 font-semibold text-center">
+            {{ getHeader('actions') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2 text-center">
+            <!-- Botón con función -->
+            <button mat-icon-button color="primary" (click)="viewDetails(purchase.buysId)" matTooltip="Ver detalles">
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <!-- Botón con navegación -->
+            <button mat-icon-button color="accent" [routerLink]="['/compras-editar', purchase.buysId]"
+              matTooltip="Editar compra">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+         <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="px-4 py-2 font-semibold text-center">
+            {{ getHeader('actions') }}
+          </th>
+          <td mat-cell *matCellDef="let purchase" class="px-4 py-2 text-center">
+            <!-- Botón con función -->
+            <button mat-icon-button color="primary" (click)="viewDetails(purchase.buysId)" matTooltip="Ver detalles">
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <!-- Botón con navegación -->
+            <button mat-icon-button color="accent" [routerLink]="['/compras-editar', purchase.buysId]"
+              matTooltip="Editar compra">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+
+        <!-- Header y Row -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="bg-gray-100 dark:bg-gray-700"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 dark:hover:bg-gray-800">
+        </tr>
+
+        <!-- Sin datos -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center py-6" [attr.colspan]="displayedColumns.length">
+            <div class="text-gray-500 dark:text-gray-300 flex flex-col items-center space-y-2">
+              <mat-icon>search_off</mat-icon>
+              <p *ngIf="input.value">No se encontraron resultados para "{{ input.value }}"</p>
+              <p *ngIf="!input.value && !isLoading">No hay datos disponibles</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Paginador -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" showFirstLastButtons
+      aria-label="Seleccionar página de compras" class="p-2">
+    </mat-paginator>
+  </div>
+</div>

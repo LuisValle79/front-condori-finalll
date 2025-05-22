@@ -1,0 +1,29 @@
+
+
+.left-buttons {
+  display: flex;
+  gap: 100px;
+}
+
+
+
+:host ::ng-deep .search-field .mat-form-field-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .search-field .mat-form-field-outline {
+  border-radius: 20px;
+}
+
+.mat-mdc-form-field {
+  border-radius: 20px;
+}
+
+.button-wrapper {
+  margin-left: auto; /* Lo empuja todo hacia la derecha dentro del mat-card-actions */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+

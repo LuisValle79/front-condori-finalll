@@ -1,0 +1,386 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+    <div class="mb-4 md:mb-0">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+        <svg class="w-6 h-6 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+            clip-rule="evenodd"></path>
+        </svg>
+        Gestión de Productos
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">Administra el inventario de productos de tu negocio</p>
+    </div>
+    <button
+      class="flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
+      [routerLink]="['/product-crear']">
+      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd">
+        </path>
+      </svg>
+      Nuevo Producto
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-8">
+    <h3 class="text-lg font-medium text-gray-800 mb-4">Filtrar productos</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Buscador -->
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+        <div class="relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <input type="text"
+            class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Nombre, código o marca..." [(ngModel)]="searchTerm" (input)="filterProducts()">
+        </div>
+      </div>
+
+      <!-- Categoría -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+        <select
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md"
+          [(ngModel)]="categoryFilter" (change)="filterProducts()">
+          <option value="">Todas las categorías</option>
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.categoryName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+        <div class="flex space-x-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="rounded text-blue-600 focus:ring-blue-500" [(ngModel)]="lowStockOnly"
+              (change)="filterProducts()">
+            <span class="ml-2 text-sm text-gray-700">Stock bajo</span>
+          </label>
+
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="rounded text-blue-600 focus:ring-blue-500" [checked]="inactiveOnly"
+              (change)="toggleInactiveFilter()" [disabled]="loadingInactive">
+            <span class="ml-2 text-sm text-gray-700">Inactivos</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        (click)="resetFilters()">
+        <svg class="-ml-0.5 mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+            clip-rule="evenodd"></path>
+        </svg>
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Vista de productos -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h3 class="text-lg font-medium text-gray-900">
+        {{ inactiveOnly ? 'Productos Inactivos' : 'Productos Activos' }}
+        <span class="text-sm text-gray-500 ml-2">({{ filteredProducts.length }} resultados)</span>
+      </h3>
+
+      <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+        <button
+          [class]="viewMode === 'compact' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+          class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors" (click)="setViewMode('compact')">
+          <svg class="inline -mt-0.5 mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Compacto
+        </button>
+        <button
+          [class]="viewMode === 'detailed' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+          class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors" (click)="setViewMode('detailed')">
+          <svg class="inline -mt-0.5 mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Detallado
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Producto
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Marca
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Precio
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Stock
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Categoría
+            </th>
+            <th *ngIf="viewMode === 'detailed'" scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Formulación
+            </th>
+            <th *ngIf="viewMode === 'detailed'" scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Proveedor
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let product of filteredProducts" class="hover:bg-gray-50 transition-colors">
+            <!-- Producto -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10 bg-blue-50 rounded-md flex items-center justify-center">
+                  <svg class="h-6 w-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                      d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                      clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">{{ product.comercialName }}</div>
+                  <div class="text-xs text-gray-500">Cód: {{ product.barCode || 'N/A' }}</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Marca -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">{{ product.brand || '-' }}</div>
+            </td>
+
+            <!-- Precio -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">{{ product.salePrice | currency }}</div>
+              <div *ngIf="product.salePrice" class="text-xs text-gray-500">
+                Costo: {{ product.salePrice | currency }}
+              </div>
+            </td>
+
+            <!-- Stock -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+
+                <span class="ml-2 text-sm font-medium" [class]="product.stock < 10 ? 'text-red-600' : 'text-gray-700'">
+                  {{ product.stock }} unidades
+                </span>
+              </div>
+            </td>
+
+            <!-- Categoría -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full" [ngClass]="{
+                      'bg-blue-100 text-blue-800': product.category.id === 1,
+                      'bg-green-100 text-green-800': product.category.id === 2,
+                      'bg-purple-100 text-purple-800': product.category.id === 3,
+                      'bg-yellow-100 text-yellow-800': product.category.id === 4,
+                      'bg-gray-100 text-gray-800': !product.category.id
+                    }">
+                {{ product.category.categoryName || 'Sin categoría' }}
+              </span>
+            </td>
+
+            <!-- Columnas detalladas -->
+            <td *ngIf="viewMode === 'detailed'" class="px-6 py-4">
+              <div class="text-sm text-gray-900 truncate max-w-xs">{{ product.formulation || '-' }}</div>
+            </td>
+
+            <td *ngIf="viewMode === 'detailed'" class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">{{ product.supplier.name || '-' }}</div>
+              <div *ngIf="product.supplier?.email" class="text-xs text-gray-500 truncate max-w-xs">
+                {{ product.supplier.email }}
+              </div>
+            </td>
+
+            <!-- Acciones -->
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex justify-end space-x-2">
+                <button class="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-50 transition-colors"
+                  (click)="openDetailsDialog(product)" title="Ver detalles">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                    <path fill-rule="evenodd"
+                      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                      clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+                <button
+                  class="text-indigo-500 hover:text-indigo-700 p-1 rounded-full hover:bg-indigo-50 transition-colors"
+                  [routerLink]="['/product-editar', product.id]" title="Editar">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                    </path>
+                  </svg>
+                </button>
+                <button *ngIf="!inactiveOnly"
+                  class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                  (click)="changeProductStatus(product, 'I')" title="Desactivar">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+                <button *ngIf="inactiveOnly"
+                  class="text-green-500 hover:text-green-700 p-1 rounded-full hover:bg-green-50 transition-colors"
+                  (click)="changeProductStatus(product, 'A')" title="Reactivar">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Loading state -->
+          <tr *ngIf="loading">
+            <td colspan="8" class="px-6 py-12 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400 animate-spin" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">Cargando productos...</h3>
+            </td>
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="!loading && filteredProducts.length === 0">
+            <td colspan="8" class="px-6 py-12 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron productos</h3>
+              <p class="mt-1 text-sm text-gray-500">Intenta ajustar tus filtros de búsqueda</p>
+              <div class="mt-6">
+                <button type="button"
+                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  (click)="resetFilters()">
+                  <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                    </path>
+                  </svg>
+                  Reiniciar filtros
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Componente de paginación con Tailwind puro -->
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <!-- Vista móvil de paginación -->
+      <div class="flex-1 flex justify-between sm:hidden">
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Anterior
+        </button>
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+          class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Siguiente
+        </button>
+      </div>
+
+      <!-- Vista de escritorio de paginación -->
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Mostrando
+            <span class="font-medium">{{ totalFilteredProducts === 0 ? 0 : (currentPage - 1) * pageSize + 1 }}</span>
+            a
+            <span class="font-medium">{{ totalFilteredProducts === 0 ? 0 : Math.min(currentPage * pageSize,
+              totalFilteredProducts) }}</span>
+            de
+            <span class="font-medium">{{ totalFilteredProducts }}</span>
+            resultados
+          </p>
+        </div>
+
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <!-- Botón Anterior -->
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Anterior</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </button>
+
+            <!-- Números de página con un número máximo de páginas para mostrar -->
+            <ng-container *ngFor="let page of getVisiblePageNumbers()">
+              <!-- Agregar elipsis si es necesario -->
+              <span *ngIf="page === 'ellipsis'"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-gray-700">
+                ...
+              </span>
+
+              <!-- Botón de número de página -->
+              <button *ngIf="page !== 'ellipsis'" (click)="goToPage(+page)"
+                class="relative inline-flex items-center px-4 py-2 border text-sm font-medium" [class]="currentPage === +page ? 
+              'z-10 bg-blue-50 border-blue-500 text-blue-600' : 
+              'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'">
+                {{ page }}
+              </button>
+            </ng-container>
+
+            <!-- Botón Siguiente -->
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Siguiente</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

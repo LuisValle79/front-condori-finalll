@@ -1,0 +1,32 @@
+<div class="detail-item">
+    <!-- Columna Producto -->
+    <div class="product-column">
+      <span class="label-mobile">Producto:</span>
+      {{ productName }}
+    </div>
+  
+    <!-- Columna Cantidad -->
+    <div class="quantity-column">
+      <span class="label-mobile">Cantidad:</span>
+      {{ detail.quantity }}
+    </div>
+  
+    <!-- Columna Precio Unitario -->
+    <div class="price-column">
+      <span class="label-mobile">P. Unitario:</span>
+      {{ detail.unitPrice | currency:'PEN':'S/.' }}
+    </div>
+  
+    <!-- Columna Total -->
+    <div class="total-column">
+      <span class="label-mobile">Total:</span>
+      {{ (detail.quantity * detail.unitPrice) | currency:'PEN':'S/.' }}
+    </div>
+  
+    <!-- Columna Acciones -->
+    <div class="actions-column">
+      <button mat-icon-button color="warn" (click)="remove.emit()" aria-label="Eliminar">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>

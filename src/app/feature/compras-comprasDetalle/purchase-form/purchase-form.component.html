@@ -1,0 +1,165 @@
+<form [formGroup]="purchaseForm" (ngSubmit)="onSubmit()" class="p-8 bg-white rounded-xl shadow-lg space-y-8">
+  <div class="flex justify-between items-center border-b border-gray-200 pb-4">
+    <h1 class="text-2xl font-bold text-gray-800">{{ isEditMode ? 'Editar Compra' : 'Ingreso de Compra' }}</h1>
+    <span class="text-sm font-medium px-3 py-1 rounded-full"
+      [ngClass]="isEditMode ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'">
+      {{ isEditMode ? 'Editando compra #' + purchaseId : 'Nueva compra' }}
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- IZQUIERDA: Cabecera + Formulario de Detalles -->
+    <div class="space-y-8">
+      <!-- Cabecera -->
+      <div class="bg-gray-50 rounded-lg p-5 border border-gray-100 shadow-sm">
+        <h2 class="text-lg font-medium text-gray-700 mb-4">Información de compra</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Fecha de Compra -->
+          <div class="space-y-2">
+            <label for="buysDate" class="block text-sm font-medium text-gray-700">
+              Fecha de Compra <span class="text-red-500">*</span>
+            </label>
+            <input id="buysDate" type="date" formControlName="buysDate" required
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow">
+            <div *ngIf="purchaseForm.get('buysDate')?.hasError('required') && purchaseForm.get('buysDate')?.touched"
+              class="text-red-500 text-xs font-medium mt-1">
+              Fecha requerida
+            </div>
+          </div>
+
+          <!-- Proveedor -->
+          <div class="space-y-2">
+            <label for="supplierId" class="block text-sm font-medium text-gray-700">
+              Proveedor <span class="text-red-500">*</span>
+            </label>
+            <select id="supplierId" formControlName="supplierId" required
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow">
+              <option value="" disabled selected hidden>Seleccione un proveedor</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                {{ supplier.name }}
+              </option>
+            </select>
+            <div *ngIf="purchaseForm.get('supplierId')?.hasError('required') && purchaseForm.get('supplierId')?.touched"
+              class="text-red-500 text-xs font-medium mt-1">
+              Seleccione un proveedor
+            </div>
+          </div>
+
+          <!-- Número de Factura -->
+          <div class="space-y-2">
+            <label for="invoiceNumber" class="block text-sm font-medium text-gray-700">
+              Número de Factura <span class="text-red-500">*</span>
+            </label>
+            <input id="invoiceNumber" type="text" formControlName="invoiceNumber" required
+              placeholder="Ej: F001-00012345"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-shadow">
+            <div
+              *ngIf="purchaseForm.get('invoiceNumber')?.hasError('required') && purchaseForm.get('invoiceNumber')?.touched"
+              class="text-red-500 text-xs font-medium mt-1">
+              Ingrese el número de factura
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de Detalle (otro componente) -->
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-50 to-white p-4 border-b border-gray-200">
+          <h2 class="text-lg font-medium text-gray-700">Agregar productos</h2>
+          <p class="text-sm text-gray-500 mt-1">{{ isEditMode ? 'Agregue o modifique productos de esta compra' :
+            'Complete el formulario para añadir productos a la compra' }}</p>
+        </div>
+        <div class="p-5">
+          <app-purchase-detail-form (detailAdded)="addDetail($event)" (detailUpdated)="updateDetail($event)"
+            [editDetail]="currentEditDetail">></app-purchase-detail-form>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- DERECHA: Lista de Detalles -->
+    <div class="bg-gray-50 rounded-lg border border-gray-200 shadow-sm overflow-hidden flex flex-col h-full">
+      <div class="flex items-center justify-between p-5 bg-white border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-800">Detalles {{ isEditMode ? 'de la Compra' : 'Agregados' }}</h3>
+        <span
+          class="inline-flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+          {{ details.length }}
+        </span>
+      </div>
+
+      <div class="flex-grow p-5 overflow-y-auto max-h-[600px]">
+        <!-- Estado de carga durante la edición -->
+        <div *ngIf="isEditMode && purchaseId && details.length === 0"
+          class="flex flex-col items-center justify-center h-full py-8 text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+          <p class="text-gray-500 mb-1">Cargando detalles de la compra...</p>
+        </div>
+
+        <!-- Sin detalles -->
+        <div *ngIf="!isEditMode && details.length === 0"
+          class="flex flex-col items-center justify-center h-full py-8 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          <p class="text-gray-500 mb-1">No hay productos agregados</p>
+          <p class="text-sm text-gray-400">Utilice el formulario para añadir productos a la compra</p>
+        </div>
+
+        <div class="space-y-3">
+          <app-purchase-detail-item *ngFor="let detail of details" [detail]="detail" (remove)="onRemoveDetail(detail)"
+            (edit)="onEditDetail($event)">
+
+
+            class="block">
+          </app-purchase-detail-item>
+        </div>
+      </div>
+
+      <div *ngIf="details.length > 0" class="p-4 bg-white border-t border-gray-200 text-center">
+        <p class="text-sm text-gray-500">
+          Total {{ details.length }} {{ details.length === 1 ? 'producto' : 'productos' }} agregados
+        </p>
+      </div>
+      <!-- Total y Botones -->
+      <div class="p-4 bg-white border-t border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <!-- Total -->
+          <div class="px-4 py-2.5 bg-gray-100 rounded-lg">
+            <span class="text-lg font-semibold text-gray-700">
+              Total: <span class="text-blue-700">{{ purchaseForm.get('buysPrice')?.value | currency }}</span>
+            </span>
+          </div>
+
+          <!-- Botones -->
+          <div class="flex gap-3 w-full md:w-auto">
+            <!-- Botón Cancelar -->
+            <a routerLink="/purchases"
+              class="inline-flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-4 py-2.5 rounded-lg shadow-sm transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+              Cancelar
+            </a>
+
+            <!-- Botón Guardar -->
+            <button type="submit"
+              class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-grow md:flex-grow-0"
+              [disabled]="purchaseForm.invalid || details.length === 0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+              {{ isEditMode ? 'Actualizar Compra' : 'Guardar Compra' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,57 @@
+<!-- purchase-form.component.html -->
+<form [formGroup]="purchaseForm" (ngSubmit)="onSubmit()">
+  <!-- Cabecera -->
+   <div>
+    <h1>{{ isEditMode ? 'Editar' : 'Ingreso de' }} Compra</h1>
+  </div>
+  <div class="header-section">
+
+
+    <div class="fechaCompra">
+      <input type="date" formControlName="buysDate" required>
+    </div>
+
+
+    <mat-form-field appearance="outline">
+      <mat-label>Proveedor</mat-label>
+      <mat-select formControlName="supplierId" required>
+        <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+          {{ supplier.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="purchaseForm.get('supplierId')?.hasError('required')">
+        Seleccione un proveedor
+      </mat-error>
+    </mat-form-field>
+
+    <!-- numero de factura-->
+    <mat-form-field appearance="outline">
+      <mat-label>Número de Factura</mat-label>
+      <input matInput formControlName="invoiceNumber" required>
+      <mat-error *ngIf="purchaseForm.get('invoiceNumber')?.hasError('required')">
+        Ingrese el número de factura
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Componente de Detalles -->
+  <app-purchase-detail-form (detailAdded)="addDetail($event)" class="detail-section">
+  </app-purchase-detail-form>
+
+  <!-- Lista de Detalles -->
+  <div class="details-list">
+    <app-purchase-detail-item *ngFor="let detail of details; let i = index" [detail]="detail"
+      (remove)="removeDetail(i)">
+    </app-purchase-detail-item>
+  </div>
+
+  <!-- Total -->
+  <div class="total-section">
+    <h3>Total: {{ purchaseForm.get('buysPrice')?.value | currency }}</h3>
+  </div>
+
+  <!-- Submit -->
+  <button mat-raised-button color="primary" type="submit" [disabled]="purchaseForm.invalid || details.length === 0">
+    Guardar Compra
+  </button>
+</form>

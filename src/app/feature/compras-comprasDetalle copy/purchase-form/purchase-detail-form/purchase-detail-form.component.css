@@ -1,0 +1,122 @@
+/* Professional Material Design Styling */
+.detail-form {
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+/* Grid container with responsive design */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Styling for form fields */
+mat-form-field {
+  width: 100%;
+}
+
+/* Custom date input styling to match Material Design */
+input[type="date"] {
+  width: 100%;
+  height: 56px;
+  padding: 16px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Wrapping the date input to make it look like a mat-form-field */
+.mat-date-wrapper {
+  position: relative;
+  padding-top: 12px;
+  margin-bottom: 20px;
+ 
+ 
+}
+
+.mat-date-wrapper label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  padding: 0 4px;
+  background-color: white;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  z-index: 1;
+ 
+}
+
+input[type="date"]:focus {
+  border-color: #3f51b5;
+  outline: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: rgba(0, 0, 0, 0.54);
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* Primary action button */
+button[color="primary"] {
+  height: 56px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+button[color="primary"] mat-icon {
+  margin-right: 8px;
+}
+
+/* Footer actions area */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Error state styling */
+.mat-error {
+  font-size: 12px;
+}
+
+/* Animation transitions */
+.mat-form-field {
+  transition: all 0.3s ease;
+}
+
+/* Hover effects */
+.mat-form-field:hover .mat-form-field-outline {
+  opacity: 0.8;
+}
+
+/* Better spacing for prefixes */
+.mat-form-field-prefix {
+  margin-right: 4px;
+  color: rgba(0, 0, 0, 0.6);
+}
+

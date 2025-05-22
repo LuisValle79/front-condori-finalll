@@ -1,0 +1,205 @@
+<form [formGroup]="detailForm" (ngSubmit)="onSubmit()" class="bg-white rounded-lg shadow-md p-6 space-y-6">
+  <!-- Título del formulario con indicador de modo -->
+  <div class="flex justify-between items-center">
+    <h3 class="text-lg font-medium text-gray-800">
+      {{ isEditing ? 'Editar Producto' : 'Agregar Producto' }}
+    </h3>
+    <button 
+      *ngIf="isEditing" 
+      type="button" 
+      (click)="cancelEdit()"
+      class="text-sm text-gray-600 hover:text-gray-800"
+    >
+      Cancelar edición
+    </button>
+  </div>
+
+  <!-- Grid principal -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <!-- Producto -->
+    <div class="space-y-2">
+      <label for="product" class="block text-sm font-medium text-gray-700">Producto <span class="text-red-500">*</span></label>
+      <select
+        id="product"
+        formControlName="productId"
+        required
+        (change)="onProductSelect($event)"
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+        [attr.disabled]="isEditing ? true : null"
+      >
+        <option value="" disabled selected hidden>Seleccione un producto</option>
+        <option *ngFor="let product of products" [value]="product.id">
+          {{ product.comercialName }}
+        </option>
+      </select>
+      <div 
+        *ngIf="detailForm.get('productId')?.hasError('required') && detailForm.get('productId')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Seleccione un producto
+      </div>
+    </div>
+
+    <!-- Cantidad -->
+    <div class="space-y-2">
+      <label for="quantity" class="block text-sm font-medium text-gray-700">Cantidad <span class="text-red-500">*</span></label>
+      <input
+        id="quantity"
+        type="number"
+        min="1"
+        formControlName="quantity"
+        required
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+      >
+      <div 
+        *ngIf="detailForm.get('quantity')?.hasError('required') && detailForm.get('quantity')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Ingrese cantidad
+      </div>
+      <div 
+        *ngIf="detailForm.get('quantity')?.hasError('min') && detailForm.get('quantity')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Mínimo 1 unidad
+      </div>
+    </div>
+
+    <!-- Precio Unitario -->
+    <div class="space-y-2">
+      <label for="unitPrice" class="block text-sm font-medium text-gray-700">Precio Unitario <span class="text-red-500">*</span></label>
+      <div class="flex items-center">
+        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+          S/
+        </span>
+        <input
+          id="unitPrice"
+          type="number"
+          step="0.01"
+          min="0.01"
+          formControlName="unitPrice"
+          required
+          class="flex-1 min-w-0 block w-full rounded-none rounded-r-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+        >
+      </div>
+      <div 
+        *ngIf="detailForm.get('unitPrice')?.hasError('required') && detailForm.get('unitPrice')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Ingrese precio
+      </div>
+      <div 
+        *ngIf="detailForm.get('unitPrice')?.hasError('min') && detailForm.get('unitPrice')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        El precio debe ser positivo
+      </div>
+    </div>
+
+    <!-- Lote -->
+    <div class="space-y-2">
+      <label for="batch" class="block text-sm font-medium text-gray-700">Lote <span class="text-red-500">*</span></label>
+      <input
+        id="batch"
+        type="text"
+        formControlName="batch"
+        required
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+      >
+      <div 
+        *ngIf="detailForm.get('batch')?.hasError('required') && detailForm.get('batch')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Ingrese número de lote
+      </div>
+    </div>
+
+    <!-- Presentación -->
+    <div class="space-y-2">
+      <label for="presentation" class="block text-sm font-medium text-gray-700">Presentación <span class="text-red-500">*</span></label>
+      <input
+        id="presentation"
+        type="text"
+        formControlName="presentation"
+        required
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+      >
+      <div 
+        *ngIf="detailForm.get('presentation')?.hasError('required') && detailForm.get('presentation')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Ingrese presentación
+      </div>
+    </div>
+
+    <!-- Registro Sanitario -->
+    <div class="space-y-2">
+      <label for="healthRecord" class="block text-sm font-medium text-gray-700">Registro Sanitario <span class="text-red-500">*</span></label>
+      <input
+        id="healthRecord"
+        type="text"
+        formControlName="healthRecord"
+        required
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+      >
+      <div 
+        *ngIf="detailForm.get('healthRecord')?.hasError('required') && detailForm.get('healthRecord')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Ingrese registro sanitario
+      </div>
+    </div>
+
+    <!-- Fecha de Vencimiento -->
+    <div class="space-y-2">
+      <label for="expireDate" class="block text-sm font-medium text-gray-700">Fecha de Vencimiento <span class="text-red-500">*</span></label>
+      <input
+        id="expireDate"
+        type="date"
+        formControlName="expireDate"
+        required
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-30 text-sm"
+      >
+      <div 
+        *ngIf="detailForm.get('expireDate')?.hasError('required') && detailForm.get('expireDate')?.touched"
+        class="text-red-500 text-xs font-medium"
+      >
+        Seleccione fecha de vencimiento
+      </div>
+    </div>
+  </div>
+
+  <!-- Campos ocultos -->
+  <input type="hidden" formControlName="id">
+  <input type="hidden" formControlName="totalDetail">
+  <input type="hidden" formControlName="status">
+
+  <!-- Acciones del formulario -->
+  <div class="flex justify-end pt-4 border-t border-gray-200">
+    <button
+      *ngIf="isEditing"
+      type="button"
+      (click)="cancelEdit()"
+      class="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+      Cancelar
+    </button>
+    
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="detailForm.invalid"
+    >
+      <svg *ngIf="!isEditing" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      <svg *ngIf="isEditing" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      {{ isEditing ? 'Actualizar Producto' : 'Agregar Producto' }}
+    </button>
+  </div>
+</form>

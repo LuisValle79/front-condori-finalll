@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ data.product.comercialName }}</h2>
+
+<mat-dialog-content>
+  <mat-tab-group>
+    <!-- Pestaña General -->
+    <mat-tab label="General">
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Nombre Comercial:</span>
+          <span class="detail-value">{{ data.product.comercialName }}</span>
+        </div>
+        <!-- ... otros campos generales -->
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña Técnico -->
+    <mat-tab label="Técnico">
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Formulación:</span>
+          <span class="detail-value">{{ data.product.formulation }}</span>
+        </div>
+        <!-- ... otros campos técnicos -->
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña Uso -->
+    
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <button mat-button color="primary" 
+          [routerLink]="['/productos/editar', data.product.id]"
+          mat-dialog-close>
+    Editar
+  </button>
+</mat-dialog-actions>

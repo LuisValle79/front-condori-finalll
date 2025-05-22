@@ -1,0 +1,70 @@
+.detail-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    gap: 1rem;
+  }
+  
+  /* Columna genérica */
+  .detail-item > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  /* Oculta etiquetas móviles en pantallas grandes */
+  .label-mobile {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #757575;
+    margin-bottom: 0.25rem;
+    display: none;
+  }
+  
+  /* Acciones */
+  .actions-column {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Responsive: diseño tipo tabla en escritorio */
+  @media (min-width: 600px) {
+    .detail-item {
+      flex-wrap: nowrap;
+    }
+  
+    .detail-item > div {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  
+    .label-mobile {
+      display: none;
+    }
+  }
+  
+  /* Responsive: diseño tipo tarjeta en móvil */
+  @media (max-width: 599px) {
+    .detail-item > div {
+      width: 100%;
+    }
+  
+    .label-mobile {
+      display: inline;
+    }
+  
+    .actions-column {
+      justify-content: flex-end;
+      margin-top: 0.5rem;
+    }
+  }
+  

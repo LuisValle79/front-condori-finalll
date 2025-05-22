@@ -1,0 +1,80 @@
+<form [formGroup]="detailForm" (ngSubmit)="onSubmit()" class="detail-form">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+    <!-- Producto -->
+    <mat-form-field appearance="outline">
+      <mat-label>Producto</mat-label>
+      <mat-select formControlName="productId" required (selectionChange)="onProductSelect($event.value)">
+        <mat-option *ngFor="let product of products" [value]="product.id">
+          {{ product.comercialName }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="detailForm.get('productId')?.hasError('required')">
+        Seleccione un producto
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Cantidad -->
+    <mat-form-field appearance="outline" class="cantidad-precio">
+      <mat-label>Cantidad</mat-label>
+      <input matInput type="number" min="1" formControlName="quantity" required>
+      <mat-error *ngIf="detailForm.get('quantity')?.hasError('required')">
+        Ingrese cantidad
+      </mat-error>
+      <mat-error *ngIf="detailForm.get('quantity')?.hasError('min')">
+        Mínimo 1 unidad
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Precio Unitario -->
+    <mat-form-field appearance="outline" class="cantidad-precio">
+      <mat-label>Precio Unitario</mat-label>
+      <input matInput type="number" step="0.01" min="0.01" formControlName="unitPrice" required>
+      <span matPrefix>S/.&nbsp;</span>
+      <mat-error *ngIf="detailForm.get('unitPrice')?.hasError('required')">
+        Ingrese precio
+      </mat-error>
+      <mat-error *ngIf="detailForm.get('unitPrice')?.hasError('min')">
+        El precio debe ser positivo
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Lote -->
+    <mat-form-field appearance="outline">
+      <mat-label>Lote</mat-label>
+      <input matInput formControlName="batch" required>
+    </mat-form-field>
+
+
+
+    <!-- Presentación -->
+    <mat-form-field appearance="outline">
+      <mat-label>Presentación</mat-label>
+      <input matInput formControlName="presentation" required>
+    </mat-form-field>
+
+    <!-- Registro Sanitario -->
+    <mat-form-field appearance="outline">
+      <mat-label>Registro Sanitario</mat-label>
+      <input matInput formControlName="healthRecord" required>
+    </mat-form-field>
+
+    <!-- Fecha de Vencimiento - Estilizada como Material -->
+    <div class="mat-date-wrapper">
+      <label>Fecha de Vencimiento</label>
+      <input type="date" formControlName="expireDate" required>
+    </div>
+  </div>
+
+
+  <!-- Botón Agregar - Ahora abajo y correctamente alineado -->
+  <div class="form-actions">
+    <button mat-raised-button color="primary" type="submit" [disabled]="detailForm.invalid">
+      <mat-icon>add</mat-icon>
+      Agregar
+    </button>
+  </div>
+
+  <!-- Campos invisibles -->
+  <input type="hidden" formControlName="id">
+  <input type="hidden" formControlName="totalDetail">
+</form>

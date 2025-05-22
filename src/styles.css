@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://cdn.lineicons.com/4.0/lineicons.css");
+@import "tailwindcss";
+
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+
+
+
+
+
+
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-bottom-right {
+  animation: slideInRight 0.4s ease forwards;
+}

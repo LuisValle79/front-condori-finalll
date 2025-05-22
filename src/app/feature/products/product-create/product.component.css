@@ -1,0 +1,20 @@
+
+@import url("https://cdn.lineicons.com/4.0/lineicons.css");
+
+.btn-close-custom {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+  
+  .btn-close-custom:hover {
+    background-color: rgba(220, 53, 69, 0.2); /* Rojo claro */
+  }
+  .scrollable-list {
+  max-height: 300px; /* o el valor que se ajuste a tu diseño */
+  overflow-y: auto;
+}

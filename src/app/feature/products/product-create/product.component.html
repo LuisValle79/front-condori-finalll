@@ -1,0 +1,347 @@
+<div class="container product-list-container my-4">
+  <!-- Header Bar -->
+  <div class="text-dark py-3 px-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="m-0">{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="px-4 pb-4">
+    <form (ngSubmit)="onSubmit()" class="form">
+      <!-- Expandable Main Content -->
+      <div class="row g-4">
+        <!-- Primera fila - Información General + Identificación (ancho completo) -->
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+              <h5 class="m-0 text-primary fw-bold"><i class="bi bi-info-square-fill me-2"></i>Información Básica</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <!-- Izquierda - Información General -->
+                <div class="col-lg-4">
+                  <h6 class="text-secondary mb-3 border-bottom pb-2">Clasificación</h6>
+                  <div class="row g-3">
+                    <!-- Proveedor -->
+                    <div class="col-12">
+                      <label for="proveedor"
+                        class="form-label small fw-bold text-uppercase text-secondary">Proveedor</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light">
+                          <i class="bi bi-building"></i>
+                        </span>
+                        <input type="text" id="proveedor" [value]="product.supplier.name" class="form-control bg-white"
+                          readonly />
+                        <button type="button" (click)="mostrarModalProveedor = true" class="btn btn-outline-warning">
+                          <i class="bi bi-arrow-left-right"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Categoria -->
+                    <div class="col-12">
+                      <label for="categoria"
+                        class="form-label small fw-bold text-uppercase text-secondary">Categoría</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light">
+                          <i class="bi bi-tag"></i>
+                        </span>
+                        <input type="text" id="categoria" [value]="product.category.categoryName"
+                          class="form-control bg-white" readonly />
+                        <button type="button" (click)="mostrarModalCategoria = true" class="btn btn-outline-warning">
+                          <i class="bi bi-arrow-left-right"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Cultivo -->
+                    <div class="col-12">
+                      <label for="cultivo"
+                        class="form-label small fw-bold text-uppercase text-secondary">Cultivo</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light">
+                          <i class="bi bi-flower1"></i>
+                        </span>
+                        <input type="text" id="cultivo" *ngIf="product.crop" [value]="product.crop.name"
+                          class="form-control bg-white" readonly />
+                        <button type="button" (click)="mostrarModalCultivo = true" class="btn btn-outline-warning">
+                          <i class="bi bi-arrow-left-right"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Centro - Identificación -->
+                <div class="col-lg-4">
+                  <h6 class="text-secondary mb-3 border-bottom pb-2">Identificación</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="comercialName" class="form-label small fw-bold text-uppercase text-secondary">Nombre
+                        Comercial</label>
+                      <input type="text" id="comercialName" [(ngModel)]="product.comercialName" name="comercialName"
+                        class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="brand" class="form-label small fw-bold text-uppercase text-secondary">Marca</label>
+                      <input type="text" id="brand" [(ngModel)]="product.brand" name="brand" class="form-control"
+                        required />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="barCode" class="form-label small fw-bold text-uppercase text-secondary">Código de
+                        Barras</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light">
+                          <i class="bi bi-upc"></i>
+                        </span>
+                        <input type="text" id="barCode" [(ngModel)]="product.barCode"
+                          (ngModelChange)="limitBarcodeLength()" (keypress)="onlyNumbers($event)" name="barCode"
+                          maxlength="13" class="form-control" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Derecha - Descripción e Inventario -->
+                <div class="col-lg-4">
+                  <h6 class="text-secondary mb-3 border-bottom pb-2">Descripción e Inventario</h6>
+                  <div class="row g-3">
+
+                    <div class="col-md-6">
+                      <label for="stock" class="form-label small fw-bold text-uppercase text-secondary">Stock</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light">
+                          <i class="bi bi-box-seam"></i>
+                        </span>
+                        <input type="number" id="stock" [(ngModel)]="product.stock"   (ngModelChange)="validateStock()" name="stock" class="form-control"
+                          required min="0" />
+                        <small class="text-danger" *ngIf="stockInvalid">
+                          El stock no puede ser negativo.
+                        </small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="salePrice" class="form-label small fw-bold text-uppercase text-secondary">
+                        Precio de Venta
+                      </label>
+                      <input type="number" id="salePrice" [(ngModel)]="product.salePrice" name="salePrice"
+                        class="form-control" placeholder="Ej: 19.99" step="0.01" (blur)="formatDecimalPrice()"
+                        required />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Segunda fila - Especificaciones técnicas (izquierda) e Información de uso (derecha) -->
+        <div class="col-12">
+          <div class="row g-4">
+            <!-- Especificaciones Técnicas -->
+            <div class="col-md-6">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                  <h5 class="m-0 text-warning fw-bold"><i class="bi bi-gear-fill me-2"></i>Especificaciones Técnicas
+                  </h5>
+                  <span class="badge bg-warning bg-opacity-10 text-warning fw-normal">Formulación & Concentración</span>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="formulation"
+                        class="form-label small fw-bold text-uppercase text-secondary">Formulación</label>
+                      <select id="formulation" [(ngModel)]="product.formulation" name="formulation" class="form-control"
+                        required>
+                        <option value="">Seleccione una formulación</option>
+                        <option value="SC">SC - Suspensión concentrada</option>
+                        <option value="SL">SL - Concentrado soluble</option>
+                        <option value="EC">EC - Concentrado emulsionable</option>
+                        <option value="WP">WP - Polvo mojable</option>
+                        <option value="WG">WG - Gránulos dispersables</option>
+                        <option value="GR">GR - Gránulos</option>
+                        <option value="DP">DP - Polvo para espolvoreo</option>
+                        <option value="CS">CS - Suspensión de cápsulas</option>
+                        <option value="FS">FS - Tratamiento de semillas</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="unit" class="form-label small fw-bold text-uppercase text-secondary">U. de
+                        Formulación</label>
+                      <select id="unit" [(ngModel)]="product.unit" name="unit" class="form-control" required>
+                        <option value="">Seleccione una unidad</option>
+                        <!-- Unidades líquidas -->
+                        <option value="L">Litros (L)</option>
+                        <option value="mL">Mililitros (mL)</option>
+                        <option value="cc">Centímetros cúbicos (cc)</option>
+                        <!-- Unidades sólidas -->
+                        <option value="kg">Kilogramos (kg)</option>
+                        <option value="g">Gramos (g)</option>
+                        <option value="mg">Miligramos (mg)</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="concentration" class="form-label small fw-bold text-uppercase text-secondary">
+                        Concentración
+                      </label>
+                      <input type="number" id="concentration" [(ngModel)]="product.concentration" name="concentration"
+                        class="form-control" placeholder="Ej: 36.5" step="0.01" min="0" required />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="concentrationUnit" class="form-label small fw-bold text-uppercase text-secondary">
+                        U. Concentración
+                      </label>
+                      <select id="concentrationUnit" [(ngModel)]="product.concentrationUnit" name="concentrationUnit"
+                        class="form-control" required>
+                        <option value="">Seleccione una unidad</option>
+                        <option value="%">%</option>
+                        <option value="g/L">g/L</option>
+                        <option value="mg/kg">mg/kg</option>
+                        <option value="kg/L">kg/L</option>
+                        <option value="g/mL">g/mL</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </form>
+  </div>
+
+  <!-- Modales mejorados -->
+  <div *ngIf="mostrarModalProveedor" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white border-0">
+          <h5 class="modal-title"><i class="bi bi-building me-2"></i>Seleccionar proveedor</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="mostrarModalProveedor = false"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="p-3 bg-light border-bottom">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0" placeholder="Buscar proveedor..."
+                [(ngModel)]="searchTerm" (input)="filterSuppliers()">
+            </div>
+          </div>
+          <div class="list-group list-group-flush scrollable-list">
+            <button type="button" *ngFor="let supplier of filteredSuppliers" (click)="seleccionarProveedor(supplier)"
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+              <div>
+                <h6 class="mb-1">{{ supplier.name }}</h6>
+                <small class="text-muted">Contacto: {{ supplier.name || 'No disponible' }}</small>
+              </div>
+              <i class="bi bi-chevron-right text-primary fs-5"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-link text-decoration-none"
+            (click)="mostrarModalProveedor = false">Cancelar</button>
+          <button type="button" class="btn btn-primary px-4">Seleccionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarModalCategoria" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-success text-white border-0">
+          <h5 class="modal-title"><i class="bi bi-tag me-2"></i>Seleccionar categoría</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="mostrarModalCategoria = false"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="p-3 bg-light border-bottom">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0" placeholder="Buscar categoría..."
+                [(ngModel)]="searchTerm" (input)="filterCategorias()">
+            </div>
+          </div>
+          <div class="list-group list-group-flush scrollable-list">
+            <button type="button" *ngFor="let categoria of filteredCategorias" (click)="seleccionarCategoria(categoria)"
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+              <div>
+                <h6 class="mb-1">{{ categoria.categoryName }}</h6>
+                <small class="text-muted">{{ categoria.categoryName || 'Sin descripción' }}</small>
+              </div>
+              <i class="bi bi-chevron-right text-success fs-5"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-link text-decoration-none"
+            (click)="mostrarModalCategoria = false">Cancelar</button>
+          <button type="button" class="btn btn-success px-4">Seleccionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarModalCultivo" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-info text-white border-0">
+          <h5 class="modal-title"><i class="bi bi-flower1 me-2"></i>Seleccionar cultivo</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="mostrarModalCultivo = false"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="p-3 bg-light border-bottom">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0" placeholder="Buscar cultivo..."
+                [(ngModel)]="searchTerm" (input)="filterCrops()">
+            </div>
+          </div>
+          <div class="list-group list-group-flush scrollable-list">
+            <button type="button" *ngFor="let c of filteredCrops" (click)="seleccionarCultivo(c)"
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+              <div>
+                <h6 class="mb-1">{{ c.name }}</h6>
+                <small class="text-muted"> </small>
+              </div>
+              <i class="bi bi-chevron-right text-info fs-5"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-link text-decoration-none"
+            (click)="mostrarModalCultivo = false">Cancelar</button>
+          <button type="button" class="btn btn-info px-4 text-white">Seleccionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-white py-3 px-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="m-0">{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+      <div>
+        <button type="button" class="btn btn-outline-warning me-2" [routerLink]="['/products']">
+          <i class="bi bi-arrow-left me-1"></i> Volver
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+          <i class="bi bi-check2-circle me-1"></i> {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
