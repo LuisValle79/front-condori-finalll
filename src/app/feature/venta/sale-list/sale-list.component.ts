@@ -229,7 +229,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
 
   async exportToPDF(saleId: number): Promise<void> {
     try {
-      // Obtener los detalles de la venta
       const details = await firstValueFrom(this.saleDetailService.getDetailsBySaleId(saleId));
       const sale = this.dataSource.data.find(s => s.saleId === saleId);
       
@@ -238,14 +237,10 @@ export class SaleListComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      // Crear nuevo documento PDF
       const doc = new jsPDF();
-      
-      // Configurar fuentes y estilos
       const pageWidth = doc.internal.pageSize.getWidth();
       
       try {
-        // Agregar logo
         const logoUrl = 'assets/images/logo.png';
         const img = new Image();
         img.src = logoUrl;
@@ -254,20 +249,18 @@ export class SaleListComponent implements OnInit, AfterViewInit {
         console.warn('No se pudo cargar el logo:', error);
       }
       
-      // Título
       doc.setFontSize(22);
       doc.setTextColor(44, 62, 80);
       doc.text('COMPROBANTE DE VENTA', pageWidth/2, 30, { align: 'center' });
       
-      // Información de la venta
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       doc.text(`Venta N°: ${sale.saleId}`, 15, 50);
       doc.text(`Fecha: ${new Date(sale.saleDate).toLocaleDateString()}`, 15, 60);
       
-      // Obtener el nombre del cliente usando el ID correcto
-      const customerName = this.customers[sale.customer?.id || sale.customer?.id];
-      doc.text(`Cliente: ${customerName}`, 15, 70);
+      // Corrección: Obtener el nombre completo del cliente correctamente
+      const customerFullName = `${sale.customer?.name || ''} ${sale.customer?.lastName || ''}`.trim();
+      doc.text(`Cliente: ${customerFullName || 'Cliente no especificado'}`, 15, 70);
       
       // Tabla de productos
       const headers = [['Producto', 'Cantidad', 'Precio Unit.', 'Subtotal']];

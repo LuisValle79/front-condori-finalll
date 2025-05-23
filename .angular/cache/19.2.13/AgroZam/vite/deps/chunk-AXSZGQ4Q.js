@@ -2,12 +2,12 @@ import {
   BreakpointObserver
 } from "./chunk-4IOEBWXR.js";
 import {
-  BidiModule
-} from "./chunk-LGN6BIF3.js";
-import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
 } from "./chunk-ODDVUBKS.js";
+import {
+  BidiModule
+} from "./chunk-LGN6BIF3.js";
 import {
   coerceElement,
   coerceNumberProperty
@@ -3001,4 +3001,4 @@ export {
   MATERIAL_SANITY_CHECKS,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-UMPHJPLU.js.map
+//# sourceMappingURL=chunk-AXSZGQ4Q.js.map

@@ -4,14 +4,14 @@ import {
   DomAdapter,
   getDOM,
   setRootDomAdapter
-} from "./chunk-4UPT57MN.js";
+} from "./chunk-SSZUDX6F.js";
 import {
   DOCUMENT,
   PLATFORM_BROWSER_ID,
   XhrFactory,
   isPlatformServer,
   parseCookieValue
-} from "./chunk-3YQX3KFV.js";
+} from "./chunk-KQ7LGQAP.js";
 import {
   APP_ID,
   ApplicationModule,
@@ -1231,4 +1231,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-PQASTXF2.js.map
+//# sourceMappingURL=chunk-ICVXVFUT.js.map

@@ -2,11 +2,11 @@ import { createRequire } from 'module';const require = createRequire(import.meta
 import {
   BrowserModule,
   DomRendererFactory2
-} from "./chunk-PQASTXF2.js";
-import "./chunk-4UPT57MN.js";
+} from "./chunk-ICVXVFUT.js";
+import "./chunk-SSZUDX6F.js";
 import {
   DOCUMENT
-} from "./chunk-3YQX3KFV.js";
+} from "./chunk-KQ7LGQAP.js";
 import {
   ANIMATION_MODULE_TYPE,
   Inject,

@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard, MatCardModule } from '@angular/material/card';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-customer',
@@ -123,37 +124,73 @@ export class CreateCustomerComponent implements OnInit {
     };
 
     if (this.isEditMode && this.customerId) {
-      const updateData = {
-        ...formData,
-        customerId: this.customerId // Agregamos el ID del cliente
-      };
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: "¿Desea actualizar los datos de este cliente?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, actualizar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const updateData = {
+            ...formData,
+            customerId: this.customerId
+          };
 
-      this.customerService.updateCustomer(this.customerId, updateData).subscribe({
-        next: () => {
-          this.snackBar.open('Cliente actualizado exitosamente', 'Cerrar', {
-            duration: 3000
-          });
-          this.router.navigate(['/clientes']);
-        },
-        error: (error) => {
-          console.error('Error updating customer:', error);
-          this.snackBar.open('Error al actualizar el cliente', 'Cerrar', {
-            duration: 3000
+          this.customerService.updateCustomer(this.customerId!, updateData).subscribe({
+            next: () => {
+              Swal.fire(
+                '¡Actualizado!',
+                'El cliente ha sido actualizado exitosamente.',
+                'success'
+              ).then(() => {
+                this.router.navigate(['/clientes']);
+              });
+            },
+            error: (error) => {
+              console.error('Error updating customer:', error);
+              Swal.fire(
+                'Error',
+                'Hubo un problema al actualizar el cliente.',
+                'error'
+              );
+            }
           });
         }
       });
     } else {
-      this.customerService.createCustomer(formData).subscribe({
-        next: () => {
-          this.snackBar.open('Cliente creado exitosamente', 'Cerrar', {
-            duration: 3000
-          });
-          this.router.navigate(['/clientes']);
-        },
-        error: (error) => {
-          console.error('Error creating customer:', error);
-          this.snackBar.open('Error al crear el cliente', 'Cerrar', {
-            duration: 3000
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: "¿Desea crear este nuevo cliente?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, crear',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.customerService.createCustomer(formData).subscribe({
+            next: () => {
+              Swal.fire(
+                '¡Creado!',
+                'El cliente ha sido creado exitosamente.',
+                'success'
+              ).then(() => {
+                this.router.navigate(['/clientes']);
+              });
+            },
+            error: (error) => {
+              console.error('Error creating customer:', error);
+              Swal.fire(
+                'Error',
+                'Hubo un problema al crear el cliente.',
+                'error'
+              );
+            }
           });
         }
       });

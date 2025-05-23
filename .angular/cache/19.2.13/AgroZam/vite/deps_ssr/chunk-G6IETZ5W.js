@@ -1,25 +1,25 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
+  HTTP_ROOT_INTERCEPTOR_FNS
+} from "./chunk-NRHY4L7X.js";
+import {
   BrowserDomAdapter,
   BrowserModule,
   EVENT_MANAGER_PLUGINS,
   EventManagerPlugin
-} from "./chunk-PQASTXF2.js";
-import {
-  HTTP_ROOT_INTERCEPTOR_FNS
-} from "./chunk-G63V3QT5.js";
+} from "./chunk-ICVXVFUT.js";
 import {
   NullViewportScroller,
   PlatformLocation,
   ViewportScroller,
   getDOM,
   setRootDomAdapter
-} from "./chunk-4UPT57MN.js";
+} from "./chunk-SSZUDX6F.js";
 import {
   DOCUMENT,
   PLATFORM_SERVER_ID,
   XhrFactory
-} from "./chunk-3YQX3KFV.js";
+} from "./chunk-KQ7LGQAP.js";
 import {
   ALLOW_MULTIPLE_PLATFORMS,
   APP_ID,
@@ -16838,4 +16838,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-OX4ZCHF6.js.map
+//# sourceMappingURL=chunk-G6IETZ5W.js.map

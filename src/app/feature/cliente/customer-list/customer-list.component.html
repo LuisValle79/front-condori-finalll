@@ -28,19 +28,27 @@
 
   <mat-card-content>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" class="w-full">
-        <!-- Nombre Column -->
+      <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="desc" class="mat-elevation-z8">
+        <!-- Columna ID (puede estar oculta pero necesaria para el ordenamiento) -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.id}} </td>
+        </ng-container>
+
+        <!-- Columna Nombre -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let customer">{{customer.name}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.name}} </td>
         </ng-container>
-
-        <!-- Apellido Column -->
+      
+        <!-- Columna Apellido -->
         <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef>Apellido</th>
-          <td mat-cell *matCellDef="let customer">{{customer.lastName}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
+          <td mat-cell *matCellDef="let customer"> {{customer.lastName}} </td>
         </ng-container>
-
+      
+        <!-- Repite para las demás columnas agregando mat-sort-header -->
+        
         <!-- Dirección Column -->
         <ng-container matColumnDef="address">
           <th mat-header-cell *matHeaderCellDef>Dirección</th>
